@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git 'https://github.com/srikanth728264/PlayWright.git'
+            }
+        }
+
+        stage('Install Python Dependencies') {
+            steps {
+                bat 'python -m pip install --upgrade pip'
+                bat 'pip install -r requirements.txt'
+                bat 'playwright install'
+            }
+        }
+
+        stage('Run Automation Tests') {
+            steps {
+                bat 'pytest -v'
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo 'Pipeline execution completed'
+        }
+        success {
+            echo 'Tests Passed'
+        }
+        failure {
+            echo 'Tests Failed'
+        }
+    }
+}
